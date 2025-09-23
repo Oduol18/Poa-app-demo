@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POA Internet - Customer Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 25%, #6D28D9 50%, #5B21B6 75%, #4C1D95 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8B5CF6, #5B21B6);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8B5CF6, #5B21B6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #F59E0B;
+            font-weight: 600;
+            margin-top: -5px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .ussd-btn {
+            background: linear-gradient(135deg, #8B5CF6, #5B21B6);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ussd-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .notification-bell {
+            position: relative;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 12px;
+            height: 12px;
+            background: #EF4444;
+            border-radius: 50%;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 30px;
+        }
+
+        .nav-item {
+            width: 100%;
+            padding: 15px 20px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 12px;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #6B7280;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: linear-gradient(135deg, #8B5CF6, #5B21B6);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .content-area {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            min-height: 600px;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #8B5CF6, #5B21B6);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .welcome-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: #8B5CF6;
+            transform: translateY(-5px);
+        }
+
+        .stat-card.speed-test {
+            background: linear-gradient(135deg, #8B5CF6, #5B21B6);
+            color: white;
+            cursor: pointer;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .stat-card.speed-test .stat-title {
+            color: white;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8B5CF6, #5B21B6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .stat-card.speed-test .stat-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #8B5CF6;
+            margin-bottom: 5px;
+        }
+
+        .stat-card.speed-test .stat-value {
+            color: white;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        .stat-card.speed-test .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .speed-test-btn {
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .speed-test-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 20px;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .plan-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid #E5E7EB;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .plan-card.saver {
+            border-color: #10B981;
+            background: linear-gradient(135deg, #ECFDF5, #F0FDF4);
+        }
+
+        .plan-card.current {
+            border-color: #8B5CF6;
+            background: linear-gradient(135deg, #F3E8FF, #FAF5FF);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .plan-badge.saver {
+            background: #10B981;
+        }
+
+        .plan-badge.current {
+            background: #8B5CF6;
+        }
+
+        .plan-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+
+        .plan-price {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .plan-price.saver {
+            color: #10B981;
+        }
+
+        .plan-price.regular {
+            color: #8B5CF6;
+        }
+
+        .plan-validity {
+            font-size: 14px;
+            color: #6B7280;
+            margin-bottom: 15px;
+        }
+
+        .plan-description {
+            font-size: 14px;
+            color: #6B7280;
+            margin-bottom: 20px;
+        }
+
+        .plan-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .plan-button.saver {
+            background: #10B981;
+            color: white;
+        }
+
+        .plan-button.regular {
+            background: #8B5CF6;
+            color: white;
+        }
+
+        .plan-button.current {
+            background: #E5E7EB;
+            color: #6B7280;
+            cursor: not-allowed;
+        }
+
+        .plan-button:not(.current):hover {
+            transform: translateY(-2px);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            background: white;
+            border: 2px solid #E5E7EB;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #374151;
+        }
+
+        .action-btn:hover {
+            border-color: #8B5CF6;
+            background: linear-gradient(135deg, #F3E8FF, #FAF5FF);
+            transform: translateY(-3px);
+        }
+
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 10px;
+            background: linear-gradient(135deg, #8B5CF6, #5B21B6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .action-label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Profile Section */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #8B5CF6, #5B21B6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            margin-right: 25px;
+        }
+
+        .profile-info h2 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            color: #374151;
+        }
+
+        .profile-info p {
+            color: #6B7280;
+            font-size: 16px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #8B5CF6;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8B5CF6, #5B21B6);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Billing Section */
+        .bill-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .bill-amount h2 {
+            font-size: 48px;
+            color: #EF4444;
+            margin-bottom: 10px;
+        }
+
+        .bill-status {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #FEF3C7;
+            color: #92400E;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .saver-alert {
+            background: linear-gradient(135deg, #ECFDF5, #F0FDF4);
+            border: 2px solid #10B981;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .payment-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-pay {
+            background: #10B981;
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-pay:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #F3F4F6;
+            color: #374151;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #E5E7EB;
+            transform: translateY(-2px);
+        }
+
+        .receipts-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #F9FAFB;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .receipt-item:hover {
+            background: #F3E8FF;
+            transform: translateX(5px);
+        }
+
+        .receipt-left {
+            flex: 1;
+        }
+
+        .receipt-date {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        .receipt-plan {
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        .receipt-right {
+            text-align: right;
+        }
+
+        .receipt-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: #8B5CF6;
+            margin-bottom: 5px;
+        }
+
+        .receipt-status {
+            font-size: 12px;
+            color: #059669;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-download {
+            background: #8B5CF6;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .btn-download:hover {
+            background: #7C3AED;
+        }
+
+        /* Support Section */
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .support-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .support-card:hover {
+            transform: translateY(-5px);
+            border-color: #8B5CF6;
+        }
+
+        .support-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #8B5CF6, #5B21B6);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .support-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        .support-desc {
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        /* Notifications */
+        .notification-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #8B5CF6;
+        }
+
+        .notification-item.warning {
+            border-left-color: #F59E0B;
+            background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
+        }
+
+        .notification-item.info {
+            border-left-color: #3B82F6;
+            background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+        }
+
+        .notification-item.success {
+            border-left-color: #10B981;
+            background: linear-gradient(135deg, #F0FDF4, #D1FAE5);
+        }
+
+        /* USSD Modal */
+        .ussd-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .ussd-screen {
+            background: #1F2937;
+            color: #10B981;
+            font-family: 'Courier New', monospace;
+            width: 350px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .ussd-header {
+            background: #374151;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ussd-title {
+            font-size: 14px;
+            color: #10B981;
+        }
+
+        .ussd-close {
+            background: #EF4444;
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .ussd-content {
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        .ussd-menu {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .ussd-history {
+            color: #F59E0B;
+            font-size: 12px;
+            margin-bottom: 10px;
+            white-space: pre-line;
+        }
+
+        .ussd-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .ussd-btn-key {
+            background: #374151;
+            color: #10B981;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+
+        .ussd-btn-key:hover {
+            background: #4B5563;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .logo-text {
+                font-size: 24px;
+            }
+            
+            .stats-grid, .plans-grid, .quick-actions, .payment-buttons, .support-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">📶</div>
+                <div>
+                    <div class="logo-text">poa!</div>
+                    <div class="tagline">internet</div>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button class="ussd-btn" onclick="toggleUSSD()">
+                    📱 USSD *384#
+                </button>
+                <div class="notification-bell" onclick="showSection('notifications')">
+                    🔔
+                    <div class="notification-badge"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <nav>
+                    <button class="nav-item active" onclick="showSection('dashboard')">
+                        📊 Dashboard
+                    </button>
+                    <button class="nav-item" onclick="showSection('profile')">
+                        👤 Profile
+                    </button>
+                    <button class="nav-item" onclick="showSection('billing')">
+                        💳 Billing
+                    </button>
+                    <button class="nav-item" onclick="showSection('support')">
+                        ❓ Support
+                    </button>
+                    <button class="nav-item" onclick="showSection('notifications')">
+                        🔔 Notifications
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Content -->
+                <div id="dashboard-content">
+                    <div class="welcome-card">
+                        <div class="welcome-title">Welcome back, John Doe!</div>
+                        <div class="welcome-subtitle">Your POA Internet experience awaits</div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">Current Plan</div>
+                                <div class="stat-icon">📶</div>
+                            </div>
+                            <div class="stat-value">5Mbps Weekly</div>
+                            <div class="stat-label">3 days remaining • KES 450</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">Data Usage</div>
+                                <div class="stat-icon">📈</div>
+                            </div>
+                            <div class="stat-value">45GB</div>
+                            <div class="stat-label">Used this week • Unlimited</div>
+                        </div>
+
+                        <div class="stat-card speed-test" onclick="runSpeedTest()">
+                            <div class="stat-header">
+                                <div class="stat-title">Speed Test</div>
+                                <div class="stat-icon">⚡</div>
+                            </div>
+                            <div class="stat-value">4.8 Mbps</div>
+                            <div class="stat-label">Download • 1.2 Mbps Upload</div>
+                            <button class="speed-test-btn">Run Speed Test</button>
+                        </div>
+                    </div>
+
+                    <!-- Available Plans -->
+                    <div class="section-title">Available Plans</div>
+                    <div class="plans-grid">
+                        <!-- Weekly Plan -->
+                        <div class="plan-card current">
+                            <div class="plan-badge current">Current</div>
+                            <div class="plan-name">5Mbps Weekly</div>
+                            <div class="plan-price regular">KES 450</div>
+                            <div class="plan-validity">7 days validity</div>
+                            <div class="plan-description">Perfect for light browsing and social media</div>
+                            <button class="plan-button current">Current Plan</button>
+                        </div>
+
+                        <!-- Monthly Saver Plan -->
+                        <div class="plan-card saver">
+                            <div class="plan-badge saver">⭐ Saver</div>
+                            <div class="plan-name">5Mbps Monthly (Saver)</div>
+                            <div class="plan-price saver">KES 1,575</div>
+                            <div class="plan-validity">30 days validity</div>
+                            <div class="plan-description">Great value! Pay before or on expiry date</div>
+                            <button class="plan-button saver" onclick="switchPlan('saver')">Switch to Saver</button>
+                        </div>
+
+                        <!-- Monthly Regular Plan -->
+                        <div class="plan-card">
+                            <div class="plan-name">5Mbps Monthly (Regular)</div>
+                            <div class="plan-price regular">KES 1,750</div>
+                            <div class="plan-validity">30 days validity</div>
+                            <div class="plan-description">Standard rate for late payments</div>
+                            <button class="plan-button regular" onclick="switchPlan('regular')">Switch to Monthly</button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="section-title">Quick Actions</div>
+                    <div class="quick-actions">
+                        <div class="action-btn" onclick="toggleUSSD()">
+                            <div class="action-icon">📱</div>
+                            <div class="action-label">USSD *384#</div>
+                        </div>
+                        <div class="action-btn" onclick="payBill()">
+                            <div class="action-icon">💳</div>
+                            <div class="action-label">Pay Bill</div>
+                        </div>
+                        <div class="action-btn" onclick="showSection('support')">
+                            <div class="action-icon">💬</div>
+                            <div class="action-label">Support</div>
+                        </div>
+                        <div class="action-btn" onclick="showSection('billing')">
+                            <div class="action-icon">📄</div>
+                            <div class="action-label">Bills</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Content -->
+                <div id="profile-content" class="hidden">
+                    <div class="profile-header">
+                        <div class="profile-avatar">JD</div>
+                        <div class="profile-info">
+                            <h2>John Doe</h2>
+                            <p>john.doe@email.com</p>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">Personal Information</div>
+                        <form>
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" value="John Doe" />
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" value="john.doe@email.com" />
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="text" value="+254712345678" />
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" value="Nairobi, Kenya" />
+                            </div>
+                            <div class="form-group">
+                                <label>Current Plan</label>
+                                <input type="text" value="5Mbps Weekly - KES 450" readonly />
+                            </div>
+                            <button type="button" class="btn-primary" onclick="saveProfile()">Update Profile</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Billing Content -->
+                <div id="billing-content" class="hidden">
+                    <div class="bill-summary">
+                        <div class="bill-amount">
+                            <h2>KES 450</h2>
+                            <div class="bill-status">Due in 3 days</div>
+                        </div>
+                        
+                        <div class="saver-alert">
+                            <h3 style="color: #065F46; margin-bottom: 10px;">⭐ Saver Rate Available!</h3>
+                            <p style="color: #047857;">Pay early and save KES 175! Monthly plan available for KES 1,575 if you pay before or on expiry date (vs KES 1,750 after expiry).</p>
+                        </div>
+
+                        <div class="payment-buttons">
+                            <button class="btn-pay" onclick="payBill()">💳 Pay Now</button>
+                            <button class="btn-secondary" onclick="downloadInvoice()">📄 Download Invoice</button>
+                            <button class="btn-secondary" onclick="enableAutoPay()">🔄 Enable Auto-Pay</button>
+                        </div>
+                    </div>
+
+                    <div class="receipts-section">
+                        <div class="section-title">Payment History & Receipts</div>
+                        
+                        <div class="receipt-item">
+                            <div class="receipt-left">
+                                <div class="receipt-date">August 15, 2024</div>
+                                <div class="receipt-plan">5Mbps Monthly (Saver)</div>
+                            </div>
+                            <div class="receipt-right">
+                                <div class="receipt-amount">KES 1,575</div>
+                                <div class="receipt-status">✅ Paid</div>
+                            </div>
+                            <button class="btn-download" onclick="downloadReceipt('2024-08-15')">Download</button>
+                        </div>
+
+                        <div class="receipt-item">
+                            <div class="receipt-left">
+                                <div class="receipt-date">August 8, 2024</div>
+                                <div class="receipt-plan">5Mbps Weekly</div>
+                            </div>
+                            <div class="receipt-right">
+                                <div class="receipt-amount">KES 450</div>
+                                <div class="receipt-status">✅ Paid</div>
+                            </div>
+                            <button class="btn-download" onclick="downloadReceipt('2024-08-08')">Download</button>
+                        </div>
+
+                        <div class="receipt-item">
+                            <div class="receipt-left">
+                                <div class="receipt-date">July 15, 2024</div>
+                                <div class="receipt-plan">5Mbps Monthly (Regular)</div>
+                            </div>
+                            <div class="receipt-right">
+                                <div class="receipt-amount">KES 1,750</div>
+                                <div class="receipt-status">✅ Paid</div>
+                            </div>
+                            <button class="btn-download" onclick="downloadReceipt('2024-07-15')">Download</button>
+                        </div>
+
+                        <div class="receipt-item">
+                            <div class="receipt-left">
+                                <div class="receipt-date">July 8, 2024</div>
+                                <div class="receipt-plan">5Mbps Weekly</div>
+                            </div>
+                            <div class="receipt-right">
+                                <div class="receipt-amount">KES 450</div>
+                                <div class="receipt-status">✅ Paid</div>
+                            </div>
+                            <button class="btn-download" onclick="downloadReceipt('2024-07-08')">Download</button>
+                        </div>
+
+                        <div class="receipt-item">
+                            <div class="receipt-left">
+                                <div class="receipt-date">June 20, 2024</div>
+                                <div class="receipt-plan">5Mbps Monthly (Saver)</div>
+                            </div>
+                            <div class="receipt-right">
+                                <div class="receipt-amount">KES 1,575</div>
+                                <div class="receipt-status">✅ Paid</div>
+                            </div>
+                            <button class="btn-download" onclick="downloadReceipt('2024-06-20')">Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Support Content -->
+                <div id="support-content" class="hidden">
+                    <div class="section-title">Customer Support</div>
+                    <div class="support-grid">
+                        <div class="support-card" onclick="openLiveChat()">
+                            <div class="support-icon">💬</div>
+                            <div class="support-title">Live Chat</div>
+                            <div class="support-desc">Get instant help from our support team</div>
+                        </div>
+
+                        <div class="support-card" onclick="callSupport()">
+                            <div class="support-icon">📞</div>
+                            <div class="support-title">Call Support</div>
+                            <div class="support-desc">0800-POA-HELP (24/7)</div>
+                        </div>
+
+                        <div class="support-card" onclick="raiseTicket()">
+                            <div class="support-icon">🎫</div>
+                            <div class="support-title">Raise Ticket</div>
+                            <div class="support-desc">Submit a complaint or request</div>
+                        </div>
+
+                        <div class="support-card" onclick="openFAQ()">
+                            <div class="support-icon">❓</div>
+                            <div class="support-title">FAQ</div>
+                            <div class="support-desc">Find answers to common questions</div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">Service Status</div>
+                        <div class="receipt-item" style="background: #F0FDF4;">
+                            <div class="receipt-left">
+                                <div class="receipt-date">Internet Service</div>
+                                <div class="receipt-plan">All systems operational</div>
+                            </div>
+                            <div class="receipt-right">
+                                <div class="receipt-status" style="color: #059669; font-size: 16px;">✅ Online</div>
+                            </div>
+                        </div>
+
+                        <div class="receipt-item" style="background: #F0FDF4;">
+                            <div class="receipt-left">
+                                <div class="receipt-date">Billing System</div>
+                                <div class="receipt-plan">Payment processing active</div>
+                            </div>
+                            <div class="receipt-right">
+                                <div class="receipt-status" style="color: #059669; font-size: 16px;">✅ Online</div>
+                            </div>
+                        </div>
+
+                        <div class="receipt-item" style="background: #F0FDF4;">
+                            <div class="receipt-left">
+                                <div class="receipt-date">Support Services</div>
+                                <div class="receipt-plan">Customer care available</div>
+                            </div>
+                            <div class="receipt-right">
+                                <div class="receipt-status" style="color: #059669; font-size: 16px;">✅ Online</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Content -->
+                <div id="notifications-content" class="hidden">
+                    <div class="section-title">Notifications</div>
+                    
+                    <div class="notification-item warning">
+                        <h4 style="margin-bottom: 8px;">⚠️ Bill due in 3 days - Pay early for Saver rate!</h4>
+                        <p style="margin-bottom: 5px;">Your current bill of KES 450 is due soon. Upgrade to monthly and save KES 175 with our Saver rate!</p>
+                        <small style="color: #92400E;">2 hours ago</small>
+                    </div>
+
+                    <div class="notification-item info">
+                        <h4 style="margin-bottom: 8px;">ℹ️ Data usage at 80%</h4>
+                        <p style="margin-bottom: 5px;">You've used 45GB of your unlimited weekly data. Speed may be reduced after fair usage.</p>
+                        <small style="color: #1E40AF;">1 day ago</small>
+                    </div>
+
+                    <div class="notification-item success">
+                        <h4 style="margin-bottom: 8px;">✅ Payment received</h4>
+                        <p style="margin-bottom: 5px;">Your payment of KES 450 for 5Mbps Weekly plan has been successfully processed.</p>
+                        <small style="color: #166534;">2 days ago</small>
+                    </div>
+
+                    <div class="notification-item info">
+                        <h4 style="margin-bottom: 8px;">🆕 New Saver Plan Available</h4>
+                        <p style="margin-bottom: 5px;">Save KES 175 on monthly plans! Pay before expiry to qualify for our special Saver rate of KES 1,575.</p>
+                        <small style="color: #1E40AF;">3 days ago</small>
+                    </div>
+
+                    <div class="notification-item success">
+                        <h4 style="margin-bottom: 8px;">🎉 Welcome to POA Internet!</h4>
+                        <p style="margin-bottom: 5px;">Thank you for choosing POA Internet. Your account has been successfully activated.</p>
+                        <small style="color: #166534;">1 week ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- USSD Modal -->
+    <div id="ussd-modal" class="ussd-modal hidden">
+        <div class="ussd-screen">
+            <div class="ussd-header">
+                <div class="ussd-title">USSD Session - *384#</div>
+                <button class="ussd-close" onclick="toggleUSSD()">×</button>
+            </div>
+            <div class="ussd-content">
+                <div class="ussd-menu">
+                    POA Internet Services<br><br>
+                    1. Check Data Usage<br>
+                    2. Recharge Account<br>
+                    3. View/Change Plan<br>
+                    4. Check Bill<br>
+                    5. Pay Bill<br>
+                    6. Raise Complaint<br>
+                    7. Help/Support<br><br>
+                    Enter choice:
+                </div>
+                <div id="ussd-history" class="ussd-history"></div>
+                <div class="ussd-buttons">
+                    <button class="ussd-btn-key" onclick="selectUSSD('1')">1</button>
+                    <button class="ussd-btn-key" onclick="selectUSSD('2')">2</button>
+                    <button class="ussd-btn-key" onclick="selectUSSD('3')">3</button>
+                    <button class="ussd-btn-key" onclick="selectUSSD('4')">4</button>
+                    <button class="ussd-btn-key" onclick="selectUSSD('5')">5</button>
+                    <button class="ussd-btn-key" onclick="selectUSSD('6')">6</button>
+                    <button class="ussd-btn-key" onclick="selectUSSD('7')">7</button>
+                    <button class="ussd-btn-key" onclick="clearUSSD()">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ussdHistory = [];
+        let currentSection = 'dashboard';
+
+        // Navigation Functions
+        function showSection(section) {
+            // Hide all sections
+            const sections = ['dashboard', 'profile', 'billing', 'support', 'notifications'];
+            sections.forEach(s => {
+                document.getElementById(s + '-content').classList.add('hidden');
+            });
+
+            // Show selected section
+            document.getElementById(section + '-content').classList.remove('hidden');
+
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Find and activate the clicked nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.textContent.toLowerCase().includes(section)) {
+                    item.classList.add('active');
+                }
+            });
+
+            currentSection = section;
+        }
+
+        // USSD Functions
+        function toggleUSSD() {
+            const modal = document.getElementById('ussd-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function selectUSSD(option) {
+            const historyDiv = document.getElementById('ussd-history');
+            let response = '';
+            
+            switch(option) {
+                case '1':
+                    response = 'Selected: 1\nData Usage: 45GB used this week\nUnlimited plan active';
+                    break;
+                case '2':
+                    response = 'Selected: 2\nRecharge Account\nEnter amount: (100-5000)\nMin: KES 100';
+                    break;
+                case '3':
+                    response = 'Selected: 3\nCurrent Plan: 5Mbps Weekly - KES 450\n1. Weekly Plan (KES 450)\n2. Monthly Saver (KES 1575)\n3. Monthly Regular (KES 1750)';
+                    break;
+                case '4':
+                    response = 'Selected: 4\nCurrent Bill: KES 450\nDue Date: 3 days\nSaver Rate Available!\nUpgrade to monthly for KES 1575';
+                    break;
+                case '5':
+                    response = 'Selected: 5\nPayment options:\n1. M-Pesa (0.00% fee)\n2. Airtel Money (0.00% fee)\n3. Card Payment (2.5% fee)';
+                    break;
+                case '6':
+                    response = 'Selected: 6\nComplaint/Request submitted\nReference: #POA' + Date.now().toString().slice(-6) + '\nResponse within 24hrs';
+                    break;
+                case '7':
+                    response = 'Selected: 7\nSupport Options:\nCall: 0800-POA-HELP\nWhatsApp: +254700123456\nWeb: support.poa.co.ke';
+                    break;
+            }
+            
+            ussdHistory.push(response);
+            historyDiv.innerHTML = ussdHistory.join('\n\n');
+        }
+
+        function clearUSSD() {
+            ussdHistory = [];
+            document.getElementById('ussd-history').innerHTML = '';
+        }
+
+        // Plan Switching Functions
+        function switchPlan(planType) {
+            let message = '';
+            if (planType === 'saver') {
+                message = 'Switching to Monthly Saver Plan (KES 1,575)!\n\nThis plan offers:\n• 30 days validity\n• 5Mbps speed\n• Unlimited data\n• KES 175 savings vs regular rate\n\nConfirm switch?';
+            } else if (planType === 'regular') {
+                message = 'Switching to Monthly Regular Plan (KES 1,750)!\n\nThis plan offers:\n• 30 days validity\n• 5Mbps speed\n• Unlimited data\n\nNote: Save KES 175 with Saver rate if you pay early!\n\nConfirm switch?';
+            }
+            
+            if (confirm(message)) {
+                alert('Plan switch initiated! You will receive a confirmation SMS shortly.');
+            }
+        }
+
+        // Speed Test Function
+        function runSpeedTest() {
+            window.open('https://speed.poa.im/', '_blank');
+        }
+
+        // Payment Functions
+        function payBill() {
+            const options = 'Choose payment method:\n\n1. M-Pesa\n2. Airtel Money\n3. Credit/Debit Card\n4. Bank Transfer';
+            const choice = prompt(options + '\n\nEnter choice (1-4):');
+            
+            if (choice) {
+                alert('Redirecting to payment gateway...\n\nAmount: KES 450\nMethod: ' + 
+                     (choice === '1' ? 'M-Pesa' : 
+                      choice === '2' ? 'Airtel Money' : 
+                      choice === '3' ? 'Card Payment' : 
+                      choice === '4' ? 'Bank Transfer' : 'Selected method'));
+            }
+        }
+
+        function downloadInvoice() {
+            alert('Invoice downloaded!\n\nFilename: POA_Invoice_' + new Date().toISOString().slice(0,10) + '.pdf\nAmount: KES 450\nDue: 3 days');
+        }
+
+        function enableAutoPay() {
+            if (confirm('Enable Auto-Pay for future bills?\n\nYour payment method will be charged automatically 1 day before due date.')) {
+                alert('Auto-Pay enabled successfully!\n\nYou can disable this anytime in billing settings.');
+            }
+        }
+
+        function downloadReceipt(date) {
+            alert('Receipt downloaded!\n\nFilename: POA_Receipt_' + date + '.pdf\nTransaction completed successfully.');
+        }
+
+        // Profile Functions
+        function saveProfile() {
+            alert('Profile updated successfully!\n\nChanges may take up to 24 hours to reflect across all systems.');
+        }
+
+        // Support Functions
+        function openLiveChat() {
+            alert('Opening live chat...\n\nConnecting you to our support team.\nAverage wait time: 2 minutes');
+        }
+
+        function callSupport() {
+            if (confirm('Call POA Support?\n\nNumber: 0800-POA-HELP\nAvailable 24/7')) {
+                alert('Dialing support...\n\nPlease have your account number ready:\nACC-' + Math.random().toString(36).substr(2, 8).toUpperCase());
+            }
+        }
+
+        function raiseTicket() {
+            const issue = prompt('Describe your issue:\n\n(Max 500 characters)');
+            if (issue) {
+                alert('Support ticket created!\n\nTicket #: POA' + Date.now().toString().slice(-6) + '\nExpected response: Within 24 hours\n\nIssue: ' + issue.substring(0, 100) + '...');
+            }
+        }
+
+        function openFAQ() {
+            alert('Opening FAQ section...\n\nCommon topics:\n• Billing & Payments\n• Technical Support\n• Plan Changes\n• Account Management\n\nVisit: help.poa.co.ke');
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('POA Internet Customer Portal loaded successfully!');
+            
+            // Show dashboard by default
+            showSection('dashboard');
+        });
+
+        // Prevent right-click context menu (optional)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Add some interactive notifications
+        setTimeout(function() {
+            console.log('💜 Welcome to POA Internet!');
+            console.log('🚀 All systems operational');
+        }, 1000);
+    </script>
+</body>
+</html>
